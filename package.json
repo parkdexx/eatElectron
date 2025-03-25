@@ -1,0 +1,24 @@
+{
+  "name": "eatelectron",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/parkdexx/eatElectron#readme",
+  "bugs": {
+    "url": "https://github.com/parkdexx/eatElectron/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parkdexx/eatElectron.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^35.0.3"
+  }
+}
