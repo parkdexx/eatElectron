@@ -1,10 +1,8 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('preload', {
-    node: () => process.versions.node,
-    chrome: () => process.versions.chrome,
-    electron: () => process.versions.electron,
-    ping: () => ipcRenderer.invoke('ping'),
-    notepad: () => ipcRenderer.invoke('notepad')
-    // we can also expose variables, not just functions
-})
+// 수동 등록 방식으로 변경
+contextBridge.exposeInMainWorld('api', {
+    version: (...args) => ipcRenderer.invoke('version', ...args),
+    ping: (...args) => ipcRenderer.invoke('ping', ...args),
+    notepad: (...args) => ipcRenderer.invoke('notepad', ...args)
+});

@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron/main')
 const path = require('node:path') // for preload
 const { exec } = require('child_process') // for command
+const fs = require('fs') // for file system
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -18,33 +19,14 @@ const createWindow = () => {
     win.loadFile('index.html')
 }
 
-// for ping command
-ipcMain.handle('ping', async () => {
-    return new Promise((resolve, reject) => {
-        // cmd ping 결과를 영어로 출력하기 위해 chcp 437 명령어를 사용
-        exec('chcp 437 && ping 8.8.8.8', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`)
-                resolve(error) //reject(error)
-            }
-            resolve(stdout ? stdout : stderr)
-        })
-    })
-})
-
-ipcMain.handle('notepad', async () => {
-    return new Promise((resolve, reject) => {
-        exec('notepad.exe', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`)
-                resolve(error) //reject(error)
-            }
-            resolve(stdout ? stdout : stderr)
-        })
-    })
-})
-
 app.whenReady().then(() => {
+    // 자동 핸들러 등록
+    const routesPath = path.join(__dirname, 'routes')
+    fs.readdirSync(routesPath).forEach(file => {
+        const { channel, handler } = require(path.join(routesPath, file));
+        ipcMain.handle(channel, handler);
+    })
+
     createWindow()
 
     // 열려있는 창이 없으면, 창을 열도록 설정 (macOS ONLY)
